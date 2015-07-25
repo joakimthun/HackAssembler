@@ -4,47 +4,49 @@
 
 source_file* create_source_file(const char* path)
 {
-	source_file* source_file = malloc(sizeof(source_file));
-	source_file->file = fopen(path, "r");
+	source_file* file = malloc(sizeof(source_file));
 
-	if (source_file->file) {
-		return source_file;
+	file->line_number = -1;
+	file->file = fopen(path, "r");
+
+	if (file->file) {
+		return file;
 	}
-
-	return NULL;
+	else
+	{
+		free(file);
+		return NULL;
+	}
 }
 
-void destroy_source_file(source_file* source_file)
+void destroy_source_file(source_file* file)
 {
-	if (source_file->file)
-		fclose(source_file->file);
+	if (file->file)
+		fclose(file->file);
 
-	free(source_file);
+	free(file);
 }
 
-void parse_line(source_file* source_file)
-{
-	int c;
-	while ((c = getc(source_file->file)) != EOF)
-		putchar(c);
-}
-
-char* get_source_line(source_file* source_file)
+void parse(source_file* file)
 {
 	char line_buffer[LINE_LENGTH];
-	if (fgets(line_buffer, LINE_LENGTH, source_file->file) == NULL)
-		return EOF;
+	while(get_source_line(line_buffer, file) != EOF)
+	{
+		if (is_comment(line_buffer, 0) || is_blank(line_buffer, 0))
+			continue;
 
-
+		file->line_number++;
+	}
 }
 
-void peek(char* buffer, int count, int index, char* line)
+int get_source_line(char* line_buffer, source_file* file)
 {
-	for (int i = 0; i < count; ++i)
+	if (fgets(line_buffer, LINE_LENGTH, file->file) == NULL)
 	{
-		int offset = index + i;
-		buffer[i] = *(line + offset);
+		return EOF;
 	}
+
+	return 1;
 }
 
 int is_comment(char* line, int index)
@@ -67,4 +69,13 @@ int is_blank(char* line, int index)
 		return 1;
 
 	return 0;
+}
+
+void peek(char* buffer, int count, int index, char* line)
+{
+	for (int i = 0; i < count; ++i)
+	{
+		int offset = index + i;
+		buffer[i] = *(line + offset);
+	}
 }

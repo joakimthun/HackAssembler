@@ -2,11 +2,11 @@
 
 int main(int argc, char* argv[])
 {
-	source_file* source_file = create_source_file("Add.asm");
+	source_file* file = create_source_file("Add.asm");
 
-	parse_line(source_file);
+	parse(file);
 
-	destroy_source_file(source_file);
+	destroy_source_file(file);
 
 	return 0;
 }
