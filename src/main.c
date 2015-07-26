@@ -1,12 +1,16 @@
 #include "parser.h"
 
+
 int main(int argc, char* argv[])
 {
-	source_file* file = create_source_file("Add.asm");
+	symbol_table* table = create_table();
+	source_file* file = create_source_file("Max.asm");
 
-	parse(file);
+	parse_labels(file, table);
+	//parse(file);
 
 	destroy_source_file(file);
+	destroy_table(table);
 
 	return 0;
 }

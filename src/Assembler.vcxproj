@@ -82,9 +82,11 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="parser.c" />
+    <ClCompile Include="symbol_table.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser.h" />
+    <ClInclude Include="symbol_table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

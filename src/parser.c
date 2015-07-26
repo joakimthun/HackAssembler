@@ -27,7 +27,41 @@ void destroy_source_file(source_file* file)
 	free(file);
 }
 
-void parse(source_file* file)
+void parse_labels(source_file* file, symbol_table* table)
+{
+	char line_buffer[LINE_LENGTH];
+	while (get_source_line(line_buffer, file) != EOF)
+	{
+		int i = 0;
+		if (is_comment(line_buffer, i))
+			continue;
+
+		char c = 0;
+		read_char(line_buffer, &i, &c);
+		while (c != '\n')
+		{
+			if (isblank(c))
+			{
+				read_char(line_buffer, &i, &c);
+				continue;
+			}
+
+			if (is_comment(line_buffer, i))
+				break;
+
+			if (c == '(')
+			{
+				parse_label(line_buffer, i, table, file);
+				break;
+			}
+
+			file->line_number++;
+			break;
+		}
+	}
+}
+
+void parse(source_file* file, symbol_table* table)
 {
 	char line_buffer[LINE_LENGTH];
 	while(get_source_line(line_buffer, file) != EOF)
@@ -47,6 +81,56 @@ int get_source_line(char* line_buffer, source_file* file)
 	}
 
 	return 1;
+}
+
+int parse_variable(char* line, int index, symbol_table* table, source_file* file)
+{
+	int start = index;
+	char c;
+	read_char(line, &start, &c);
+	char buffer[100];
+	int j = 0;
+	while (!isspace(c))
+	{
+		buffer[j] = c;
+		j++;
+		read_char(line, &start, &c);
+	}
+
+	buffer[j] = '\0';
+
+	if (!contains_entry(table, buffer))
+	{
+		table_entry entry;
+		entry.value = file->line_number + 1;
+		memcpy(entry.key, buffer, strlen(buffer) + 1);
+		add_entry(table, entry);
+	}
+}
+
+int parse_label(char* line, int index, symbol_table* table, source_file* file)
+{
+	int start = index;
+	char c;
+	read_char(line, &start, &c);
+	char buffer[100];
+	int j = 0;
+	while (c != ')')
+	{
+		buffer[j] = c;
+		j++;
+		read_char(line, &start, &c);
+	}
+
+	buffer[j] = '\0';
+
+	if (!contains_entry(table, buffer))
+	{
+		table_entry entry;
+		entry.value = file->line_number + 1;
+		memcpy(entry.key, buffer, strlen(buffer) + 1);
+		add_entry(table, entry);
+	}
 }
 
 int is_comment(char* line, int index)
@@ -79,3 +163,9 @@ void peek(char* buffer, int count, int index, char* line)
 		buffer[i] = *(line + offset);
 	}
 }
+
+void read_char(char* line, int* index, char* out)
+{
+	*out = *(line + *index);
+	(*index)++;
+};
