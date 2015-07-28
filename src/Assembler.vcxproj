@@ -80,11 +80,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="codegen.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="parser.c" />
     <ClCompile Include="symbol_table.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="codegen.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="symbol_table.h" />
   </ItemGroup>

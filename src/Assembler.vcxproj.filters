@@ -24,12 +24,18 @@
     <ClCompile Include="symbol_table.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="codegen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="symbol_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,6 +31,8 @@ symbol_table* create_table()
 	add_entry(table, (table_entry){ .key = "SCREEN", .value = 0x4000 });
 	add_entry(table, (table_entry){ .key = "KBD", .value = 0x6000 });
 
+	table->next_ram_address = 16;
+
 	return table;
 }
 
@@ -59,7 +61,7 @@ int contains_entry(symbol_table* table, const char* key)
 	return 0;
 }
 
-char* adress_of(symbol_table* table, const char* key)
+int adress_of(symbol_table* table, const char* key)
 {
 	for (int i = 0; i < table->current_index; ++i)
 	{
