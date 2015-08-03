@@ -72,5 +72,5 @@ int adress_of(symbol_table* table, const char* key)
 		}
 	}
 
-	return NULL;
+	return 0;
 }

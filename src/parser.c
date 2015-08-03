@@ -9,7 +9,6 @@ void parse_label(char* line, int index, symbol_table* table, source_file* in_fil
 int is_comment(char* line, int index);
 int is_blank(char* line, int index);
 void peek(char* buffer, int count, int index, char* line);
-void read_char(char* line, int* index, char* out);
 char next_symbol(char* line, int index);
 
 source_file* create_source_file(const char* path)
@@ -107,6 +106,9 @@ void parse(source_file* in_file, symbol_table* table, output_file* out_file)
 			break;
 		}
 	}
+
+	out_file->file[out_file->index] = '\0';
+	out_file->index++;
 }
 
 int get_source_line(char* line_buffer, source_file* file)
@@ -306,7 +308,7 @@ void rewind_file(source_file* file)
 }
 
 
-output_file* create_output_file(char* name)
+output_file* create_output_file()
 {
 	output_file* file = malloc(sizeof(output_file));
 	file->index = 0;

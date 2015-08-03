@@ -6,8 +6,13 @@
 
 #include "symbol_table.h"
 
+#define FILE_LENGTH 10000000
+#define DEST_CODE_LENGTH 8
+#define COMP_CODE_LENGTH 27
+#define JUMP_CODE_LENGTH 8
+
 typedef struct {
-	char file[10000];
+	char file[FILE_LENGTH];
 	int index;
 } output_file;
 

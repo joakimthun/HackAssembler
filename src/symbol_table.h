@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define TABLE_LENGTH 500
+#define TABLE_LENGTH 1000
 
 typedef struct {
 	char key[100];

@@ -1,15 +1,15 @@
 #include "codegen.h"
 
-char* gen_dest(char* array_16, char* dest);
-char* gen_comp(char* array_16, char* comp);
-char* gen_jump(char* array_16, char* jump);
+void gen_dest(char* array_16, char* dest);
+void gen_comp(char* array_16, char* comp);
+void gen_jump(char* array_16, char* jump);
 void to_binary15(int value, char* array_16);
 void write(char* array_16, output_file* file);
 char* find_entry(code_entry* array_ptr, int array_length, char* key);
 
-code_entry dest_code[8];
-code_entry comp_code[27];
-code_entry jump_code[8];
+code_entry dest_code[DEST_CODE_LENGTH];
+code_entry comp_code[COMP_CODE_LENGTH];
+code_entry jump_code[JUMP_CODE_LENGTH];
 
 void append_a_instruction(output_file* file, int value)
 {
@@ -45,18 +45,18 @@ void append_c_instruction(output_file* file, c_inst inst)
 	write(binary, file);
 }
 
-char* gen_dest(char* array_16, char* dest)
+void gen_dest(char* array_16, char* dest)
 {
-	char* value = find_entry(dest_code, 8, dest);
+	char* value = find_entry(dest_code, DEST_CODE_LENGTH, dest);
 
 	array_16[5] = value[0]; // d1
 	array_16[4] = value[1]; // d2
 	array_16[3] = value[2]; // d3
 }
 
-char* gen_comp(char* array_16, char* comp)
+void gen_comp(char* array_16, char* comp)
 {
-	char* value = find_entry(comp_code, 27, comp);
+	char* value = find_entry(comp_code, COMP_CODE_LENGTH, comp);
 
 	array_16[12] = value[0]; // a
 	array_16[11] = value[1]; // c1
@@ -67,9 +67,9 @@ char* gen_comp(char* array_16, char* comp)
 	array_16[6] = value[6]; // c6
 }
 
-char* gen_jump(char* array_16, char* jump)
+void gen_jump(char* array_16, char* jump)
 {
-	char* value = find_entry(jump_code, 8, jump);
+	char* value = find_entry(jump_code, JUMP_CODE_LENGTH, jump);
 
 	array_16[2] = value[0]; // j1
 	array_16[1] = value[1]; // j2
@@ -91,21 +91,21 @@ void write(char* array_16, output_file* file)
 void to_binary15(int value, char* array_16)
 {
 	// Ugly and hackish but it works 
-	array_16[14] = value & 0x8000 ? '1' : '0';
-	array_16[13] = value & 0x4000 ? '1' : '0';
-	array_16[12] = value & 0x2000 ? '1' : '0';
-	array_16[11] = value & 0x1000 ? '1' : '0';
-	array_16[10] = value & 0x800 ? '1' : '0';
-	array_16[9] = value & 0x400 ? '1' : '0';
-	array_16[8] = value & 0x200 ? '1' : '0';
-	array_16[7] = value & 0x80 ? '1' : '0';
-	array_16[6] = value & 0x40 ? '1' : '0';
-	array_16[5] = value & 0x20 ? '1' : '0';
-	array_16[4] = value & 0x10 ? '1' : '0';
-	array_16[3] = value & 0x08 ? '1' : '0';
-	array_16[2] = value & 0x04 ? '1' : '0';
-	array_16[1] = value & 0x02 ? '1' : '0';
-	array_16[0] = value & 0x01 ? '1' : '0';
+	array_16[14] = value & 0x4000 ? '1' : '0'; // 16384
+	array_16[13] = value & 0x2000 ? '1' : '0'; // 8192
+	array_16[12] = value & 0x1000 ? '1' : '0'; // 4096
+	array_16[11] = value & 0x800 ? '1' : '0'; // 2048
+	array_16[10] = value & 0x400 ? '1' : '0'; // 1024
+	array_16[9] = value & 0x200 ? '1' : '0'; // 512
+	array_16[8] = value & 0x100 ? '1' : '0'; // 256
+	array_16[7] = value & 0x80 ? '1' : '0'; // 128
+	array_16[6] = value & 0x40 ? '1' : '0'; // 64
+	array_16[5] = value & 0x20 ? '1' : '0'; // 32
+	array_16[4] = value & 0x10 ? '1' : '0'; // 16
+	array_16[3] = value & 0x08 ? '1' : '0'; // 8
+	array_16[2] = value & 0x04 ? '1' : '0'; // 4
+	array_16[1] = value & 0x02 ? '1' : '0'; // 2
+	array_16[0] = value & 0x01 ? '1' : '0'; // 1
 }
 
 char* find_entry(code_entry* array_ptr, int array_length, char* key)
@@ -113,7 +113,7 @@ char* find_entry(code_entry* array_ptr, int array_length, char* key)
 	if (key[0] == '0')
 		return array_ptr[0].value;
 
-	for (int i = 0; i < array_length; ++i)
+	for (int i = 0; i <= array_length; ++i)
 	{
 		code_entry current_entry = array_ptr[i];
 		if (strcmp(key, current_entry.key) == 0)
