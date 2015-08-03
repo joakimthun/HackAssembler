@@ -8,3 +8,6 @@ Example usage:
 ```
 
 This will generate a Pong.hack file that can be executed in a hack emulator.
+
+TODO:
+  - Error handling
